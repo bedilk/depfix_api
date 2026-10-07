@@ -1,0 +1,18 @@
+# Day-3 fork targets: real repos that actually import a provider SDK depfix
+# watches. One `owner/repo` per line.
+#
+# Deliberately NOT pre-populated with guesses. A repo name that looks
+# plausible but doesn't exist (or doesn't import the SDK) produces a run that
+# fails for the wrong reason, and a wrong reason in a measurement record is
+# worse than an empty one.
+#
+# How to pick one honestly:
+#   1. GitHub code search: `"from openai import" language:python stars:>50`
+#      or `"require('stripe')" language:javascript stars:>50`
+#   2. Confirm the SDK is a real dependency, not a doc example
+#   3. Confirm it has a test script that emits parseable output --
+#      `depfix` needs test identity to produce a KEPT verdict at all
+#   4. Paste it below
+#
+# Pick 3-5. Fewer than 3 and the KEPT rate is noise; more than 5 and you
+# won't finish the review pass that makes the number mean anything.

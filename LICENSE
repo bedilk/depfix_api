@@ -1,0 +1,87 @@
+depfix Source Available License v1.0
+
+Copyright (c) 2024–2026 Bedil Karimov and Tohir Saidzoda. All rights reserved.
+
+TERMS AND CONDITIONS
+
+1. DEFINITIONS
+
+   "Software" means the depfix source code, documentation, configuration files,
+   and all associated materials in this repository.
+
+   "Commercial Use" means any use of the Software, or a product derived from it,
+   to generate revenue — including but not limited to: offering it as a hosted
+   service (SaaS), embedding it in a paid product, using it in paid consulting
+   engagements, or operating it on behalf of paying customers.
+
+   "Non-Commercial Use" means personal projects, academic research, open-source
+   projects that are not commercially exploited, and internal evaluation by any
+   organization, provided no revenue is generated from that use.
+
+   "You" means the individual or organization exercising rights under this License.
+
+2. PERMITTED NON-COMMERCIAL USE
+
+   Subject to the conditions below, you are granted a worldwide, royalty-free,
+   non-exclusive license to:
+
+   a. Use, run, and execute the Software for Non-Commercial Use;
+   b. Copy and modify the Software for Non-Commercial Use;
+   c. Distribute copies of the Software or modifications for Non-Commercial Use,
+      provided you include this License in its entirety and do not remove or alter
+      any copyright notices.
+
+3. COMMERCIAL USE REQUIRES A SEPARATE LICENSE
+
+   You may NOT use the Software for Commercial Use without obtaining a separate
+   written commercial license from the copyright holders. To inquire about a
+   commercial license, contact: bedil.karimov@gmail.com
+
+4. PROHIBITED ACTS
+
+   You may NOT:
+
+   a. Claim ownership of the Software or represent the Software as your own work;
+   b. Remove or modify any copyright, trademark, or attribution notices;
+   c. Use the names "depfix", "Bedil Karimov", or "Tohir Saidzoda" to endorse or
+      promote products derived from this Software without prior written permission;
+   d. Sub-license, sell, or transfer rights granted under this License to any
+      third party for Commercial Use.
+
+5. ATTRIBUTION
+
+   Any permitted redistribution of the Software, in whole or in part, must:
+
+   a. Include a copy of this License;
+   b. Retain all copyright, patent, trademark, and attribution notices;
+   c. Clearly state that modifications have been made, if any.
+
+6. INTELLECTUAL PROPERTY
+
+   The copyright holders retain all intellectual property rights in and to the
+   Software. This License does not grant you any rights to trademarks, service
+   marks, or trade names of the copyright holders.
+
+7. NO WARRANTY
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+   COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF, OR
+   IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+8. TERMINATION
+
+   Your rights under this License terminate automatically if you breach any of
+   its terms. Upon termination, you must destroy all copies of the Software in
+   your possession.
+
+9. GOVERNING LAW
+
+   This License shall be governed by and construed in accordance with applicable
+   law, without regard to conflict of law principles.
+
+---
+
+For commercial licensing inquiries: bedil.karimov@gmail.com

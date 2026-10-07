@@ -1,0 +1,9 @@
+{
+  "name": "stripe-wrapper-fixture",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Eval fixture: a wrapped Stripe client re-exported from a lib module, used to score call-site recall through one hop of CJS re-export propagation.",
+  "dependencies": {
+    "stripe": "^14.0.0"
+  }
+}

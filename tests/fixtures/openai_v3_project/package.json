@@ -1,0 +1,9 @@
+{
+  "name": "openai-v3-fixture",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Eval fixture: a small app written against openai-node v3, used to score v3->v4 fix generation.",
+  "dependencies": {
+    "openai": "^3.3.0"
+  }
+}

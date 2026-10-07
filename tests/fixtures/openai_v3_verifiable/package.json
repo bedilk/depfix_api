@@ -1,0 +1,12 @@
+{
+  "name": "openai-v3-verifiable-fixture",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Week 4 Verifier fixture: like openai_v3_project, but with a self-contained SDK shim (a `file:` dependency, not a real published package -- no network) and a real node:test suite, so depfix.verify.Verifier can install (resolves the local shim, no registry access) and run tests for real. The `openai` dependency name also makes this fixture scan-friendly: depfix.scanners.callsites only recognizes an import as SDK-bound when its require/import spec matches a provider's declared sdk_packages name.",
+  "scripts": {
+    "test": "node --test --test-reporter=tap"
+  },
+  "dependencies": {
+    "openai": "file:./vendor/openai-shim"
+  }
+}

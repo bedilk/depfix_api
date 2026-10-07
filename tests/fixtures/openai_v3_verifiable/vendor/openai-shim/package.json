@@ -1,0 +1,7 @@
+{
+  "name": "openai",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Local file: dependency standing in for the real 'openai' npm package -- see index.js for the rationale.",
+  "main": "index.js"
+}

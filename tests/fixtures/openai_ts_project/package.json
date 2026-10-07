@@ -1,0 +1,9 @@
+{
+  "name": "openai-ts-fixture",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Eval fixture: an ESM/TypeScript client wrapper (declare-and-export in one statement, plus an `import type` alongside a value import), used to score call-site recall against TS-specific syntax.",
+  "dependencies": {
+    "openai": "^4.20.0"
+  }
+}

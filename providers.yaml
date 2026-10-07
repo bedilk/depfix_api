@@ -1,0 +1,843 @@
+providers:
+- id: openai
+  name: OpenAI
+  api_version_scheme: semver
+  api_base_urls:
+  - https://api.openai.com
+  sdk_packages:
+  - name: openai
+    ecosystem: npm
+  - name: openai
+    ecosystem: pypi
+  - name: ruby-openai
+    ecosystem: rubygems
+  feeds:
+  - kind: npm_dist_tag
+    package: openai
+    dist_tag: latest
+    github_repo: openai/openai-node
+  - kind: pypi_dist_tag
+    package: openai
+    github_repo: openai/openai-python
+  - kind: github_release
+    repo: openai/openai-node
+  - kind: openapi_spec
+    url: https://raw.githubusercontent.com/openai/openai-openapi/master/openapi.yaml
+  - kind: security_advisory
+    package: openai
+    ecosystem: npm
+  - kind: security_advisory
+    package: openai
+    ecosystem: pypi
+  - kind: rubygems_dist_tag
+    gem: ruby-openai
+  - kind: changelog_html
+    url: https://platform.openai.com/docs/changelog
+  - kind: ts_exports_diff
+    package: openai
+- id: stripe
+  name: Stripe
+  api_version_scheme: dated
+  api_base_urls:
+  - https://api.stripe.com
+  sdk_packages:
+  - name: stripe
+    ecosystem: npm
+  - name: stripe
+    ecosystem: pypi
+  - name: stripe
+    ecosystem: rubygems
+  feeds:
+  - kind: npm_dist_tag
+    package: stripe
+    dist_tag: latest
+    github_repo: stripe/stripe-node
+  - kind: pypi_dist_tag
+    package: stripe
+    github_repo: stripe/stripe-python
+  - kind: github_release
+    repo: stripe/stripe-node
+  - kind: openapi_spec
+    url: https://raw.githubusercontent.com/stripe/openapi/master/openapi/spec3.json
+  - kind: changelog_html
+    url: https://docs.stripe.com/changelog
+  - kind: rubygems_dist_tag
+    gem: stripe
+    github_repo: stripe/stripe-ruby
+  - kind: security_advisory
+    package: stripe
+    ecosystem: npm
+  - kind: security_advisory
+    package: stripe
+    ecosystem: pypi
+  - kind: security_advisory
+    package: stripe
+    ecosystem: rubygems
+  - kind: ts_exports_diff
+    package: stripe
+- id: anthropic
+  name: Anthropic
+  api_version_scheme: semver
+  api_base_urls:
+  - https://api.anthropic.com
+  sdk_packages:
+  - name: '@anthropic-ai/sdk'
+    ecosystem: npm
+  - name: anthropic
+    ecosystem: pypi
+  - name: anthropic
+    ecosystem: rubygems
+  feeds:
+  - kind: npm_dist_tag
+    package: '@anthropic-ai/sdk'
+    dist_tag: latest
+    github_repo: anthropics/anthropic-sdk-typescript
+  - kind: pypi_dist_tag
+    package: anthropic
+    github_repo: anthropics/anthropic-sdk-python
+  - kind: github_release
+    repo: anthropics/anthropic-sdk-typescript
+  - kind: security_advisory
+    package: '@anthropic-ai/sdk'
+    ecosystem: npm
+  - kind: security_advisory
+    package: anthropic
+    ecosystem: pypi
+  - kind: rubygems_dist_tag
+    gem: anthropic
+  - kind: openapi_spec
+    url: https://raw.githubusercontent.com/anthropics/anthropic-sdk-python/main/api.json
+  - kind: changelog_html
+    url: https://docs.anthropic.com/en/release-notes/api
+  - kind: ts_exports_diff
+    package: '@anthropic-ai/sdk'
+  # Fixture: messages.stream() introduced in @anthropic-ai/sdk 0.37 as the
+  # preferred streaming helper. messages.create() still works for non-streaming,
+  # but streaming callers should migrate.
+  - kind: fixture_change
+    id: anthropic-sdk-stream-api-0.20-0.131
+    old_token: "0.20.9"
+    new_token: "0.131.0"
+    spec_changes:
+      - kind: operation_id_changed
+        severity: breaking
+        subject: "anthropic.messages.create"
+        after: "anthropic.messages.stream"
+        detail: >
+          Replace streaming calls: const stream = client.messages.stream({model,
+          max_tokens, messages}); const msg = await stream.finalMessage();
+          For non-streaming, messages.create() is unchanged.
+          messages.stream() returns a MessageStream — call .finalMessage() to get
+          the completed Message, or iterate with for-await for incremental events.
+- id: supabase
+  name: Supabase
+  api_version_scheme: semver
+  api_base_urls:
+  - https://api.supabase.com
+  sdk_packages:
+  - name: '@supabase/supabase-js'
+    ecosystem: npm
+  - name: supabase
+    ecosystem: pypi
+  feeds:
+  - kind: npm_dist_tag
+    package: '@supabase/supabase-js'
+    dist_tag: latest
+    github_repo: supabase/supabase-js
+  - kind: pypi_dist_tag
+    package: supabase
+    github_repo: supabase/supabase-py
+  - kind: github_release
+    repo: supabase/supabase-js
+  - kind: security_advisory
+    package: '@supabase/supabase-js'
+    ecosystem: npm
+  - kind: security_advisory
+    package: supabase
+    ecosystem: pypi
+  - kind: openapi_spec
+    url: https://api.supabase.com/api/v1-json
+  - kind: changelog_html
+    url: https://supabase.com/changelog
+  - kind: ts_exports_diff
+    package: '@supabase/supabase-js'
+- id: vercel-ai
+  name: Vercel AI SDK
+  api_version_scheme: semver
+  sdk_packages:
+  - name: ai
+    ecosystem: npm
+  feeds:
+  - kind: npm_dist_tag
+    package: ai
+    dist_tag: latest
+    github_repo: vercel/ai
+  - kind: npm_dist_tag
+    package: '@ai-sdk/openai'
+    dist_tag: latest
+    github_repo: vercel/ai
+  - kind: npm_dist_tag
+    package: '@ai-sdk/anthropic'
+    dist_tag: latest
+    github_repo: vercel/ai
+  - kind: github_release
+    repo: vercel/ai
+  - kind: security_advisory
+    package: ai
+    ecosystem: npm
+  - kind: changelog_html
+    url: https://sdk.vercel.ai/changelog
+  - kind: ts_exports_diff
+    package: ai
+- id: sentry
+  name: Sentry
+  api_version_scheme: semver
+  sdk_packages:
+  - name: '@sentry/node'
+    ecosystem: npm
+  - name: sentry-sdk
+    ecosystem: pypi
+  - name: sentry-ruby
+    ecosystem: rubygems
+  feeds:
+  - kind: npm_dist_tag
+    package: '@sentry/node'
+    dist_tag: latest
+    github_repo: getsentry/sentry-javascript
+  - kind: pypi_dist_tag
+    package: sentry-sdk
+    github_repo: getsentry/sentry-python
+  - kind: github_release
+    repo: getsentry/sentry-javascript
+  - kind: security_advisory
+    package: '@sentry/node'
+    ecosystem: npm
+  - kind: security_advisory
+    package: sentry-sdk
+    ecosystem: pypi
+  - kind: rubygems_dist_tag
+    gem: sentry-ruby
+  - kind: openapi_spec
+    url: https://raw.githubusercontent.com/getsentry/sentry-api-schema/main/openapi-deref.json
+  - kind: changelog_html
+    url: https://docs.sentry.io/product/changelog/
+  - kind: ts_exports_diff
+    package: '@sentry/node'
+- id: prisma
+  name: Prisma
+  api_version_scheme: semver
+  sdk_packages:
+  - name: '@prisma/client'
+    ecosystem: npm
+  - name: prisma
+    ecosystem: pypi
+  feeds:
+  - kind: npm_dist_tag
+    package: '@prisma/client'
+    dist_tag: latest
+    github_repo: prisma/prisma
+  - kind: github_release
+    repo: prisma/prisma
+  - kind: security_advisory
+    package: '@prisma/client'
+    ecosystem: npm
+  - kind: changelog_html
+    url: https://www.prisma.io/changelog
+  - kind: ts_exports_diff
+    package: '@prisma/client'
+- id: clerk
+  name: Clerk
+  api_version_scheme: semver
+  sdk_packages:
+  - name: '@clerk/nextjs'
+    ecosystem: npm
+  - name: clerk-backend-api
+    ecosystem: pypi
+  - name: clerk-sdk-ruby
+    ecosystem: rubygems
+  feeds:
+  - kind: npm_dist_tag
+    package: '@clerk/nextjs'
+    dist_tag: latest
+    github_repo: clerk/javascript
+  - kind: github_release
+    repo: clerk/javascript
+  - kind: security_advisory
+    package: '@clerk/nextjs'
+    ecosystem: npm
+  - kind: openapi_spec
+    url: https://raw.githubusercontent.com/clerkinc/openapi/main/openapi.json
+  - kind: changelog_html
+    url: https://clerk.com/changelog
+  - kind: ts_exports_diff
+    package: '@clerk/nextjs'
+- id: langchain
+  name: LangChain
+  api_version_scheme: semver
+  sdk_packages:
+  - name: '@langchain/openai'
+    ecosystem: npm
+  - name: '@langchain/core'
+    ecosystem: npm
+  - name: '@langchain/anthropic'
+    ecosystem: npm
+  - name: langchain
+    ecosystem: pypi
+  - name: langchain-core
+    ecosystem: pypi
+  - name: langchain-openai
+    ecosystem: pypi
+  - name: langchain-anthropic
+    ecosystem: pypi
+  - name: langchain-google-genai
+    ecosystem: pypi
+  feeds:
+  - kind: npm_dist_tag
+    package: '@langchain/openai'
+    dist_tag: latest
+    github_repo: langchain-ai/langchainjs
+  - kind: pypi_dist_tag
+    package: langchain
+    github_repo: langchain-ai/langchain
+  - kind: pypi_dist_tag
+    package: langchain-core
+    github_repo: langchain-ai/langchain
+  - kind: pypi_dist_tag
+    package: langchain-openai
+    github_repo: langchain-ai/langchain
+  - kind: github_release
+    repo: langchain-ai/langchainjs
+  - kind: github_release
+    repo: langchain-ai/langchain
+  - kind: security_advisory
+    package: '@langchain/openai'
+    ecosystem: npm
+  - kind: security_advisory
+    package: langchain
+    ecosystem: pypi
+  - kind: security_advisory
+    package: langchain-core
+    ecosystem: pypi
+  - kind: security_advisory
+    package: langchain-openai
+    ecosystem: pypi
+  - kind: changelog_html
+    url: https://python.langchain.com/docs/changelog/
+  - kind: ts_exports_diff
+    package: '@langchain/openai'
+- id: aws-s3
+  name: AWS SDK for JavaScript (S3)
+  api_version_scheme: semver
+  sdk_packages:
+  - name: '@aws-sdk/client-s3'
+    ecosystem: npm
+  - name: boto3
+    ecosystem: pypi
+  - name: aws-sdk-s3
+    ecosystem: rubygems
+  feeds:
+  - kind: npm_dist_tag
+    package: '@aws-sdk/client-s3'
+    dist_tag: latest
+    github_repo: aws/aws-sdk-js-v3
+  - kind: github_release
+    repo: aws/aws-sdk-js-v3
+  - kind: security_advisory
+    package: '@aws-sdk/client-s3'
+    ecosystem: npm
+  - kind: changelog_html
+    url: https://raw.githubusercontent.com/aws/aws-sdk-js-v3/main/CHANGELOG.md
+  - kind: ts_exports_diff
+    package: '@aws-sdk/client-s3'
+  - kind: smithy_spec
+    url: https://raw.githubusercontent.com/aws/aws-sdk-js-v3/main/codegen/sdk-codegen/aws-models/s3.json
+- id: firebase
+  name: Firebase SDK
+  api_version_scheme: semver
+  sdk_packages:
+  - name: firebase
+    ecosystem: npm
+  - name: firebase-admin
+    ecosystem: pypi
+  feeds:
+  - kind: npm_dist_tag
+    package: firebase
+    dist_tag: latest
+    github_repo: firebase/firebase-js-sdk
+  - kind: pypi_dist_tag
+    package: firebase-admin
+    github_repo: firebase/firebase-admin-python
+  - kind: github_release
+    repo: firebase/firebase-js-sdk
+  - kind: security_advisory
+    package: firebase
+    ecosystem: npm
+  - kind: security_advisory
+    package: firebase-admin
+    ecosystem: pypi
+  - kind: openapi_spec
+    url: https://raw.githubusercontent.com/firebase/firebase-admin-node/master/etc/firebase-admin.api.json
+  - kind: changelog_html
+    url: https://firebase.google.com/support/release-notes/admin/node
+  - kind: ts_exports_diff
+    package: firebase
+- id: twilio
+  name: Twilio SDK
+  api_version_scheme: semver
+  sdk_packages:
+  - name: twilio
+    ecosystem: npm
+  - name: twilio
+    ecosystem: pypi
+  - name: twilio-ruby
+    ecosystem: rubygems
+  feeds:
+  - kind: npm_dist_tag
+    package: twilio
+    dist_tag: latest
+    github_repo: twilio/twilio-node
+  - kind: pypi_dist_tag
+    package: twilio
+    github_repo: twilio/twilio-python
+  - kind: github_release
+    repo: twilio/twilio-node
+  - kind: security_advisory
+    package: twilio
+    ecosystem: npm
+  - kind: security_advisory
+    package: twilio
+    ecosystem: pypi
+  - kind: openapi_spec
+    url: https://raw.githubusercontent.com/twilio/twilio-oai/main/spec/yaml/twilio_api_v2010.yaml
+  - kind: changelog_html
+    url: https://www.twilio.com/docs/release-notes/node-helper-library
+  - kind: ts_exports_diff
+    package: twilio
+- id: sendgrid
+  name: Twilio SendGrid SDK
+  api_version_scheme: semver
+  sdk_packages:
+  - name: '@sendgrid/mail'
+    ecosystem: npm
+  - name: sendgrid
+    ecosystem: pypi
+  - name: sendgrid-ruby
+    ecosystem: rubygems
+  feeds:
+  - kind: npm_dist_tag
+    package: '@sendgrid/mail'
+    dist_tag: latest
+    github_repo: sendgrid/sendgrid-nodejs
+  - kind: pypi_dist_tag
+    package: sendgrid
+    github_repo: sendgrid/sendgrid-python
+  - kind: github_release
+    repo: sendgrid/sendgrid-nodejs
+  - kind: security_advisory
+    package: '@sendgrid/mail'
+    ecosystem: npm
+  - kind: security_advisory
+    package: sendgrid
+    ecosystem: pypi
+  - kind: rubygems_dist_tag
+    gem: sendgrid-ruby
+    github_repo: sendgrid/sendgrid-ruby
+  - kind: openapi_spec
+    url: https://raw.githubusercontent.com/sendgrid/sendgrid-oai/main/oai.yaml
+  - kind: changelog_html
+    url: https://docs.sendgrid.com/release-notes
+  - kind: ts_exports_diff
+    package: '@sendgrid/mail'
+- id: octokit
+  name: Octokit REST SDK
+  api_version_scheme: semver
+  sdk_packages:
+  - name: '@octokit/rest'
+    ecosystem: npm
+  - name: '@octokit/core'
+    ecosystem: npm
+  - name: probot
+    ecosystem: npm
+  - name: octokit
+    ecosystem: rubygems
+  - name: PyGithub
+    ecosystem: pypi
+  feeds:
+  - kind: npm_dist_tag
+    package: '@octokit/rest'
+    dist_tag: latest
+    github_repo: octokit/rest.js
+  - kind: github_release
+    repo: octokit/rest.js
+  - kind: openapi_spec
+    url: https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.json
+  - kind: security_advisory
+    package: '@octokit/rest'
+    ecosystem: npm
+  - kind: changelog_html
+    url: https://github.com/octokit/rest.js/blob/main/CHANGELOG.md
+  - kind: ts_exports_diff
+    package: '@octokit/rest'
+- id: slack
+  name: Slack Web API SDK
+  api_version_scheme: semver
+  sdk_packages:
+  - name: '@slack/web-api'
+    ecosystem: npm
+  - name: slack-sdk
+    ecosystem: pypi
+  - name: slack-ruby-client
+    ecosystem: rubygems
+  feeds:
+  - kind: npm_dist_tag
+    package: '@slack/web-api'
+    dist_tag: latest
+    github_repo: slackapi/node-slack-sdk
+  - kind: pypi_dist_tag
+    package: slack-sdk
+    github_repo: slackapi/python-slack-sdk
+  - kind: github_release
+    repo: slackapi/node-slack-sdk
+  - kind: security_advisory
+    package: '@slack/web-api'
+    ecosystem: npm
+  - kind: security_advisory
+    package: slack-sdk
+    ecosystem: pypi
+  - kind: openapi_spec
+    url: https://raw.githubusercontent.com/slackapi/slack-api-specs/master/web-api/slack_web_openapi_v2.json
+  - kind: changelog_html
+    url: https://api.slack.com/changelog
+  - kind: ts_exports_diff
+    package: '@slack/web-api'
+- id: discord
+  name: discord.js
+  api_version_scheme: semver
+  sdk_packages:
+  - name: discord.js
+    ecosystem: npm
+  - name: discord.py
+    ecosystem: pypi
+  - name: discordrb
+    ecosystem: rubygems
+  feeds:
+  - kind: npm_dist_tag
+    package: discord.js
+    dist_tag: latest
+    github_repo: discordjs/discord.js
+  - kind: github_release
+    repo: discordjs/discord.js
+  - kind: rubygems_dist_tag
+    gem: discordrb
+  - kind: openapi_spec
+    url: https://raw.githubusercontent.com/discord/discord-api-spec/main/specs/openapi.json
+  - kind: security_advisory
+    package: discord.js
+    ecosystem: npm
+  - kind: changelog_html
+    url: https://discord.com/developers/docs/change-log
+  - kind: ts_exports_diff
+    package: discord.js
+- id: mongodb
+  name: MongoDB Driver
+  api_version_scheme: semver
+  sdk_packages:
+  - name: mongodb
+    ecosystem: npm
+  - name: pymongo
+    ecosystem: pypi
+  - name: mongo
+    ecosystem: rubygems
+  feeds:
+  - kind: npm_dist_tag
+    package: mongodb
+    dist_tag: latest
+    github_repo: mongodb/node-mongodb-native
+  - kind: pypi_dist_tag
+    package: pymongo
+    github_repo: mongodb/mongo-python-driver
+  - kind: github_release
+    repo: mongodb/node-mongodb-native
+  - kind: security_advisory
+    package: mongodb
+    ecosystem: npm
+  - kind: security_advisory
+    package: pymongo
+    ecosystem: pypi
+  - kind: openapi_spec
+    url: https://raw.githubusercontent.com/mongodb/atlas-sdk-go/main/openapi/atlas-api.yaml
+  - kind: changelog_html
+    url: https://www.mongodb.com/docs/drivers/node/current/release-notes/
+  - kind: ts_exports_diff
+    package: mongodb
+- id: redis
+  name: node-redis
+  api_version_scheme: semver
+  sdk_packages:
+  - name: redis
+    ecosystem: npm
+  - name: redis
+    ecosystem: pypi
+  - name: redis
+    ecosystem: rubygems
+  feeds:
+  - kind: npm_dist_tag
+    package: redis
+    dist_tag: latest
+    github_repo: redis/node-redis
+  - kind: github_release
+    repo: redis/node-redis
+  - kind: security_advisory
+    package: redis
+    ecosystem: npm
+  - kind: changelog_html
+    url: https://github.com/redis/node-redis/blob/master/CHANGELOG.md
+  - kind: redis_commands
+    url: https://raw.githubusercontent.com/redis/redis-doc/master/commands.json
+  - kind: ts_exports_diff
+    package: redis
+- id: posthog
+  name: PostHog Node.js SDK
+  api_version_scheme: semver
+  sdk_packages:
+  - name: posthog-node
+    ecosystem: npm
+  - name: posthog
+    ecosystem: pypi
+  - name: posthog-ruby
+    ecosystem: rubygems
+  feeds:
+  - kind: npm_dist_tag
+    package: posthog-node
+    dist_tag: latest
+    github_repo: PostHog/posthog-js
+  - kind: github_release
+    repo: PostHog/posthog-js
+  - kind: openapi_spec
+    url: https://app.posthog.com/api/schema/
+  - kind: security_advisory
+    package: posthog-node
+    ecosystem: npm
+  - kind: changelog_html
+    url: https://posthog.com/changelog
+  - kind: ts_exports_diff
+    package: posthog-node
+- id: algolia
+  name: Algolia JavaScript Client
+  api_version_scheme: semver
+  sdk_packages:
+  - name: algoliasearch
+    ecosystem: npm
+  - name: algoliasearch
+    ecosystem: pypi
+  - name: algolia
+    ecosystem: rubygems
+  feeds:
+  - kind: npm_dist_tag
+    package: algoliasearch
+    dist_tag: latest
+    github_repo: algolia/algoliasearch-client-javascript
+  - kind: github_release
+    repo: algolia/algoliasearch-client-javascript
+  - kind: openapi_spec
+    url: https://raw.githubusercontent.com/algolia/api-clients-automation/main/specs/bundled/search.yml
+  - kind: security_advisory
+    package: algoliasearch
+    ecosystem: npm
+  - kind: changelog_html
+    url: https://www.algolia.com/doc/changelog/
+  - kind: ts_exports_diff
+    package: algoliasearch
+- id: google-cloud
+  name: Google Cloud Client Libraries
+  api_version_scheme: semver
+  api_base_urls:
+  - https://storage.googleapis.com
+  sdk_packages:
+  - name: '@google-cloud/storage'
+    ecosystem: npm
+  - name: google-cloud-storage
+    ecosystem: pypi
+  feeds:
+  - kind: npm_dist_tag
+    package: '@google-cloud/storage'
+    dist_tag: latest
+    github_repo: googleapis/nodejs-storage
+  - kind: pypi_dist_tag
+    package: google-cloud-storage
+    github_repo: googleapis/python-storage
+  - kind: github_release
+    repo: googleapis/nodejs-storage
+  - kind: openapi_spec
+    url: https://raw.githubusercontent.com/googleapis/googleapis/master/google/storage/v2/storage.yaml
+  - kind: security_advisory
+    package: '@google-cloud/storage'
+    ecosystem: npm
+  - kind: security_advisory
+    package: google-cloud-storage
+    ecosystem: pypi
+  - kind: changelog_html
+    url: https://cloud.google.com/storage/docs/release-notes
+  - kind: ts_exports_diff
+    package: '@google-cloud/storage'
+- id: elasticsearch
+  name: Elasticsearch Clients
+  api_version_scheme: semver
+  api_base_urls:
+  - https://www.elastic.co/elasticsearch
+  sdk_packages:
+  - name: '@elastic/elasticsearch'
+    ecosystem: npm
+  - name: elasticsearch
+    ecosystem: pypi
+  - name: elasticsearch
+    ecosystem: rubygems
+  feeds:
+  - kind: npm_dist_tag
+    package: '@elastic/elasticsearch'
+    dist_tag: latest
+    github_repo: elastic/elasticsearch-js
+  - kind: pypi_dist_tag
+    package: elasticsearch
+    github_repo: elastic/elasticsearch-py
+  - kind: github_release
+    repo: elastic/elasticsearch-js
+  - kind: rubygems_dist_tag
+    gem: elasticsearch
+  - kind: openapi_spec
+    url: https://raw.githubusercontent.com/elastic/elasticsearch-specification/main/output/openapi/elasticsearch-openapi.json
+  - kind: security_advisory
+    package: '@elastic/elasticsearch'
+    ecosystem: npm
+  - kind: security_advisory
+    package: elasticsearch
+    ecosystem: pypi
+  - kind: changelog_html
+    url: https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/changelog.html
+  - kind: ts_exports_diff
+    package: '@elastic/elasticsearch'
+- id: postgresql
+  name: PostgreSQL Client Libraries
+  api_version_scheme: semver
+  api_base_urls:
+  - https://www.postgresql.org
+  sdk_packages:
+  - name: pg
+    ecosystem: npm
+  - name: psycopg
+    ecosystem: pypi
+  - name: pg
+    ecosystem: rubygems
+  feeds:
+  - kind: npm_dist_tag
+    package: pg
+    dist_tag: latest
+    github_repo: brianc/node-postgres
+  - kind: pypi_dist_tag
+    package: psycopg
+    github_repo: psycopg/psycopg
+  - kind: github_release
+    repo: brianc/node-postgres
+  - kind: rubygems_dist_tag
+    gem: pg
+  - kind: security_advisory
+    package: pg
+    ecosystem: npm
+  - kind: security_advisory
+    package: psycopg
+    ecosystem: pypi
+  - kind: changelog_html
+    url: https://node-postgres.com/announcements
+  - kind: ts_exports_diff
+    package: pg
+  # Fixture: node-postgres 8.23 explicit connection management.
+  # Pool.query() is a convenience wrapper; in 8.23+ explicit connect/release
+  # is required for transaction support and connection error handling.
+  - kind: fixture_change
+    id: pg-8-pool-query-to-connect-8.16-8.23
+    old_token: "8.16.3"
+    new_token: "8.23.1"
+    spec_changes:
+      - kind: operation_id_changed
+        severity: breaking
+        subject: "postgresql.Pool"
+        after: "pg.Pool"
+        detail: >
+          In pg ≥8.23, prefer named imports: import { Pool } from 'pg'
+          instead of the default import pattern. Also use explicit
+          pool.connect() + client.release() for transaction safety.
+      - kind: operation_id_changed
+        severity: breaking
+        subject: "postgresql.query"
+        after: "postgresql.execute"
+        detail: >
+          In pg ≥8.23, pool.execute() (aliased from query) provides
+          clearer intent for parameterised statements with typed results.
+- id: kafka
+  name: Apache Kafka Clients
+  api_version_scheme: semver
+  api_base_urls:
+  - https://kafka.apache.org
+  sdk_packages:
+  - name: kafkajs
+    ecosystem: npm
+  - name: kafka-python
+    ecosystem: pypi
+  - name: ruby-kafka
+    ecosystem: rubygems
+  feeds:
+  - kind: npm_dist_tag
+    package: kafkajs
+    dist_tag: latest
+    github_repo: tulios/kafkajs
+  - kind: pypi_dist_tag
+    package: kafka-python
+    github_repo: dpkp/kafka-python
+  - kind: github_release
+    repo: tulios/kafkajs
+  - kind: security_advisory
+    package: kafkajs
+    ecosystem: npm
+  - kind: security_advisory
+    package: kafka-python
+    ecosystem: pypi
+  - kind: changelog_html
+    url: https://github.com/tulios/kafkajs/blob/master/CHANGELOG.md
+  - kind: asyncapi_spec
+    url: https://raw.githubusercontent.com/confluentinc/schema-registry/master/api/schema-registry-api-spec.yaml
+  - kind: ts_exports_diff
+    package: kafkajs
+- id: rabbitmq
+  name: RabbitMQ Clients
+  api_version_scheme: semver
+  api_base_urls:
+  - https://www.rabbitmq.com
+  sdk_packages:
+  - name: amqplib
+    ecosystem: npm
+  - name: pika
+    ecosystem: pypi
+  - name: bunny
+    ecosystem: rubygems
+  feeds:
+  - kind: npm_dist_tag
+    package: amqplib
+    dist_tag: latest
+    github_repo: amqp-node/amqplib
+  - kind: pypi_dist_tag
+    package: pika
+    github_repo: pika/pika
+  - kind: github_release
+    repo: amqp-node/amqplib
+  - kind: security_advisory
+    package: amqplib
+    ecosystem: npm
+  - kind: security_advisory
+    package: pika
+    ecosystem: pypi
+  - kind: changelog_html
+    url: https://github.com/amqp-node/amqplib/blob/main/CHANGELOG.md
+  - kind: asyncapi_spec
+    url: https://raw.githubusercontent.com/rabbitmq/rabbitmq-website/main/asyncapi/rabbitmq.yaml
+  - kind: ts_exports_diff
+    package: amqplib

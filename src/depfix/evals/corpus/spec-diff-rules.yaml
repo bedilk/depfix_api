@@ -1,0 +1,292 @@
+# Deterministic corpus for classify.spec_rules.classify_spec_changes().
+#
+# Every case here is pure-function (diff_specs -> classify_spec_changes), no
+# network and no LLM, so it runs in CI on every push and `verified: true` is
+# earned by tracing the algorithm by hand against the fixture spec, not by a
+# one-off manual run.
+
+- id: spec-path-removed
+  category: spec_diff
+  verified: true
+  description: >
+    Deleting an entire path collapses to a single METHOD_REMOVED breaking
+    change keyed off the path string.
+  package: widgetapi
+  old_version: "1.0.0"
+  new_version: "2.0.0"
+  old_spec:
+    openapi: "3.0.0"
+    info: {title: WidgetAPI, version: "1.0.0"}
+    paths:
+      /v1/widgets:
+        get:
+          operationId: listWidgets
+          responses:
+            "200":
+              description: ok
+  new_spec:
+    openapi: "3.0.0"
+    info: {title: WidgetAPI, version: "2.0.0"}
+    paths: {}
+  expected_changes:
+    - kind: method_removed
+      old_api_contains: widgets
+      min_confidence: 1.0
+
+- id: spec-operation-id-renamed
+  category: spec_diff
+  verified: true
+  description: >
+    An operationId rename maps to METHOD_RENAMED, since generated SDKs name
+    methods off operationId.
+  package: widgetapi
+  old_version: "1.0.0"
+  new_version: "2.0.0"
+  old_spec:
+    openapi: "3.0.0"
+    info: {title: WidgetAPI, version: "1.0.0"}
+    paths:
+      /v1/charges:
+        post:
+          operationId: createCharge
+          responses:
+            "200":
+              description: ok
+  new_spec:
+    openapi: "3.0.0"
+    info: {title: WidgetAPI, version: "2.0.0"}
+    paths:
+      /v1/charges:
+        post:
+          operationId: createPaymentCharge
+          responses:
+            "200":
+              description: ok
+  expected_changes:
+    - kind: method_renamed
+      old_api_contains: charges
+      min_confidence: 1.0
+
+- id: spec-request-param-removed
+  category: spec_diff
+  verified: true
+  description: >
+    A removed request-side query parameter maps to PARAM_REMOVED
+    (direction="request").
+  package: widgetapi
+  old_version: "1.0.0"
+  new_version: "2.0.0"
+  old_spec:
+    openapi: "3.0.0"
+    info: {title: WidgetAPI, version: "1.0.0"}
+    paths:
+      /v1/charges:
+        get:
+          operationId: listCharges
+          parameters:
+            - name: customer
+              in: query
+              schema: {type: string}
+          responses:
+            "200":
+              description: ok
+  new_spec:
+    openapi: "3.0.0"
+    info: {title: WidgetAPI, version: "2.0.0"}
+    paths:
+      /v1/charges:
+        get:
+          operationId: listCharges
+          parameters: []
+          responses:
+            "200":
+              description: ok
+  expected_changes:
+    - kind: param_removed
+      old_api_contains: customer
+      min_confidence: 1.0
+
+- id: spec-param-now-required
+  category: spec_diff
+  verified: true
+  description: >
+    A previously-optional parameter becoming required maps to
+    PARAM_NOW_REQUIRED.
+  package: widgetapi
+  old_version: "1.0.0"
+  new_version: "2.0.0"
+  old_spec:
+    openapi: "3.0.0"
+    info: {title: WidgetAPI, version: "1.0.0"}
+    paths:
+      /v1/charges:
+        get:
+          operationId: listCharges
+          parameters:
+            - name: idempotency_key
+              in: query
+              required: false
+              schema: {type: string}
+          responses:
+            "200":
+              description: ok
+  new_spec:
+    openapi: "3.0.0"
+    info: {title: WidgetAPI, version: "2.0.0"}
+    paths:
+      /v1/charges:
+        get:
+          operationId: listCharges
+          parameters:
+            - name: idempotency_key
+              in: query
+              required: true
+              schema: {type: string}
+          responses:
+            "200":
+              description: ok
+  expected_changes:
+    - kind: param_now_required
+      old_api_contains: charges
+      min_confidence: 1.0
+
+- id: spec-response-field-removed
+  category: spec_diff
+  verified: true
+  description: >
+    A removed response-body field maps to FIELD_REMOVED
+    (direction="response") rather than PARAM_REMOVED.
+  package: widgetapi
+  old_version: "1.0.0"
+  new_version: "2.0.0"
+  old_spec:
+    openapi: "3.0.0"
+    info: {title: WidgetAPI, version: "1.0.0"}
+    paths:
+      /v1/charges:
+        get:
+          operationId: listCharges
+          responses:
+            "200":
+              description: ok
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      id: {type: string}
+                      amount: {type: integer}
+  new_spec:
+    openapi: "3.0.0"
+    info: {title: WidgetAPI, version: "2.0.0"}
+    paths:
+      /v1/charges:
+        get:
+          operationId: listCharges
+          responses:
+            "200":
+              description: ok
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      id: {type: string}
+  expected_changes:
+    - kind: field_removed
+      old_api_contains: amount
+      min_confidence: 1.0
+
+- id: spec-response-field-type-changed
+  category: spec_diff
+  verified: true
+  description: >
+    A response field's type changing maps to FIELD_TYPE_CHANGED
+    (direction="response").
+  package: widgetapi
+  old_version: "1.0.0"
+  new_version: "2.0.0"
+  old_spec:
+    openapi: "3.0.0"
+    info: {title: WidgetAPI, version: "1.0.0"}
+    paths:
+      /v1/charges:
+        get:
+          operationId: listCharges
+          responses:
+            "200":
+              description: ok
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      amount: {type: integer}
+  new_spec:
+    openapi: "3.0.0"
+    info: {title: WidgetAPI, version: "2.0.0"}
+    paths:
+      /v1/charges:
+        get:
+          operationId: listCharges
+          responses:
+            "200":
+              description: ok
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      amount: {type: string}
+  expected_changes:
+    - kind: field_type_changed
+      old_api_contains: integer
+      min_confidence: 1.0
+
+- id: spec-request-enum-value-removed
+  category: spec_diff
+  verified: true
+  description: >
+    Removing an accepted enum value from a request field maps to
+    ENUM_VALUE_REMOVED with severity=breaking (request direction).
+  package: widgetapi
+  old_version: "1.0.0"
+  new_version: "2.0.0"
+  old_spec:
+    openapi: "3.0.0"
+    info: {title: WidgetAPI, version: "1.0.0"}
+    paths:
+      /v1/charges:
+        post:
+          operationId: createCharge
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    currency: {type: string, enum: [usd, eur, gbp]}
+          responses:
+            "200":
+              description: ok
+  new_spec:
+    openapi: "3.0.0"
+    info: {title: WidgetAPI, version: "2.0.0"}
+    paths:
+      /v1/charges:
+        post:
+          operationId: createCharge
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    currency: {type: string, enum: [usd, eur]}
+          responses:
+            "200":
+              description: ok
+  expected_changes:
+    - kind: enum_value_removed
+      old_api_contains: gbp
+      min_confidence: 1.0

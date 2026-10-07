@@ -1,0 +1,73 @@
+# Opt-in, per-repo config for the Week 6 fleet orchestrator (`depfix pipeline`).
+#
+# A repo is only ever touched by the fleet orchestrator if this file exists
+# at its default branch's root as `.depfix.yml` -- no file means the repo is
+# skipped entirely (skip_reason: no_repo_config). Copy this to `.depfix.yml`
+# in the target repo and trim it down; every field below is optional except
+# `version`, and unknown fields are a hard parse error (fail closed, not
+# silently ignored).
+#
+# `ignore` and `enabled: false` are tenant instructions -- they are checked
+# first and are never bypassable, including by `depfix pipeline --force`.
+# Every other field below (bookkeeping like max attempts/cooldown/max open
+# PRs) *is* bypassable with `--force`.
+
+version: 1
+
+# Master kill switch for this repo. Same effect as removing the file, but
+# keeps the rest of this config around for when you flip it back on.
+enabled: true
+
+# Branch to base new PRs on and to diff against. Defaults to the repo's
+# actual default branch (as resolved via the GitHub API) when omitted.
+# base_branch: main
+
+# Run the repo's real test suite against each fix before it's kept. When
+# false, edits are applied and a PR is opened without any test evidence --
+# only turn this off for repos with no test suite depfix can run.
+verify: true
+
+# Open a real PR once a fix is confirmed. When false, depfix still scans,
+# fixes, and verifies -- it just stops short of pushing a branch/PR (useful
+# for a dry-run rollout before trusting the fleet with write access).
+open_pr: true
+
+# Open PRs as drafts instead of ready-for-review.
+draft_pr: false
+
+# Cap how many changes this repo will have fixed in a single `pipeline`
+# run. Can only ever *lower* the fleet-wide default
+# (Settings.pipeline_max_changes_per_repo) -- raising it above the
+# fleet-wide cap here has no effect.
+# max_changes_per_run: 2
+
+# Restrict which providers' breaking changes this repo will act on.
+# `exclude` always wins over `include`; an empty `include` means "no
+# restriction" (every provider allowed), not "nothing allowed". Both
+# support the same segment-aware globs as `paths` below (`*` never
+# crosses a `/`; there's no `/` in a provider id, so `*` behaves like a
+# normal wildcard here).
+providers:
+  include: []
+  # include: ["openai", "stripe-*"]
+  exclude: []
+  # exclude: ["stripe-legacy"]
+
+# Restrict which files a fix is allowed to touch, matched against each
+# edit's repo-relative path. Same exclude-wins-over-include semantics as
+# `providers`. Globs are segment-aware: `*` matches within one path
+# segment, `**` matches across zero or more segments (`src/**` matches
+# everything under `src/`, not the bare `src` segment itself).
+paths:
+  include: []
+  # include: ["src/**"]
+  exclude: []
+  # exclude: ["src/vendor/**", "**/*.generated.*"]
+
+# Dedupe keys or provider-id globs to permanently skip for this repo, e.g.
+# a breaking change this repo has deliberately decided not to migrate.
+# Checked against both the change's dedupe_key and its provider_id.
+ignore: []
+# ignore:
+#   - some-dedupe-key-from-a-breaking-change
+#   - anthropic*

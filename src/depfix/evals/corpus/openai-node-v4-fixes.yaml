@@ -1,0 +1,249 @@
+# Fix-generation corpus, run against tests/fixtures/openai_v3_project — a
+# small real-shaped app written against openai-node v3.
+#
+# Every case requires an LLM (FixGenerator/OllamaFixGenerator), so
+# `requires_llm` defaults to true and these are skipped under `--no-llm`.
+# `verified: false` because nobody has actually run these against a live
+# model in this environment yet — marking them true without having watched
+# them pass would be exactly the kind of silently-inflated pass rate the
+# loader's mandatory `verified` field exists to prevent. Flip to true once a
+# real run confirms the fix_assertion for each.
+
+- id: openai-v4-client-constructor
+  category: fix_generation
+  verified: false
+  description: >
+    v4 replaces the Configuration/OpenAIApi constructor pair with a single
+    `new OpenAI({ apiKey })` call.
+  fixture: openai_v3_project
+  target_file: src/client.js
+  breaking_change:
+    package: openai
+    old_version: "3.3.0"
+    new_version: "4.0.0"
+    old_api: "openai.OpenAIApi(configuration)"
+    new_api: "new OpenAI({ apiKey })"
+    description: >
+      openai-node v4 removed the Configuration/OpenAIApi classes in favor of
+      a single client class constructed directly with your API key.
+    migration_guide: >
+      Replace `const { Configuration, OpenAIApi } = require("openai")` with
+      `const OpenAI = require("openai")`. Replace
+      `new Configuration({ apiKey })` + `new OpenAIApi(configuration)` with
+      `new OpenAI({ apiKey })`.
+    kind: module_shape_changed
+    source: manual
+    provider_id: openai
+    confidence: 0.9
+    examples:
+      - - |
+          const { Configuration, OpenAIApi } = require("openai");
+          const configuration = new Configuration({ apiKey: process.env.OPENAI_API_KEY });
+          const openai = new OpenAIApi(configuration);
+        - |
+          const OpenAI = require("openai");
+          const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  fix_assertion:
+    must_contain:
+      - "new OpenAI("
+    must_not_contain:
+      - "OpenAIApi"
+      - "new Configuration("
+    max_changed_line_ratio: 0.6
+
+- id: openai-v4-chat-completions
+  category: fix_generation
+  verified: false
+  description: >
+    v4 moves `createChatCompletion` under the `chat.completions` resource and
+    drops the `.data` response wrapper.
+  fixture: openai_v3_project
+  target_file: src/chat.js
+  breaking_change:
+    package: openai
+    old_version: "3.3.0"
+    new_version: "4.0.0"
+    old_api: "openai.createChatCompletion(params)"
+    new_api: "openai.chat.completions.create(params)"
+    description: >
+      `openai.createChatCompletion()` was replaced by
+      `openai.chat.completions.create()`; the response is returned directly,
+      no longer wrapped in `.data`.
+    migration_guide: >
+      Replace `openai.createChatCompletion(params)` with
+      `openai.chat.completions.create(params)`, and drop the leading `.data`
+      when reading the response (`response.choices` instead of
+      `response.data.choices`).
+    kind: method_renamed
+    source: manual
+    provider_id: openai
+    confidence: 0.9
+    examples:
+      - - |
+          const response = await openai.createChatCompletion({ model, messages });
+          return response.data.choices[0].message.content;
+        - |
+          const response = await openai.chat.completions.create({ model, messages });
+          return response.choices[0].message.content;
+  fix_assertion:
+    must_contain:
+      - "chat.completions.create"
+    must_not_contain:
+      - "createChatCompletion"
+    max_changed_line_ratio: 0.5
+
+- id: openai-v4-moderations
+  category: fix_generation
+  verified: false
+  description: >
+    v4 moves `createModeration` under the `moderations` resource.
+  fixture: openai_v3_project
+  target_file: src/chat.js
+  breaking_change:
+    package: openai
+    old_version: "3.3.0"
+    new_version: "4.0.0"
+    old_api: "openai.createModeration(params)"
+    new_api: "openai.moderations.create(params)"
+    description: >
+      `openai.createModeration()` was replaced by
+      `openai.moderations.create()`; the response is returned directly, no
+      longer wrapped in `.data`.
+    migration_guide: >
+      Replace `openai.createModeration(params)` with
+      `openai.moderations.create(params)`, and drop the leading `.data` when
+      reading the response.
+    kind: method_renamed
+    source: manual
+    provider_id: openai
+    confidence: 0.9
+    examples:
+      - - |
+          const response = await openai.createModeration({ input });
+          return response.data.results[0];
+        - |
+          const response = await openai.moderations.create({ input });
+          return response.results[0];
+  fix_assertion:
+    must_contain:
+      - "moderations.create"
+    must_not_contain:
+      - "createModeration"
+    max_changed_line_ratio: 0.5
+
+- id: openai-v4-embeddings
+  category: fix_generation
+  verified: false
+  description: >
+    v4 moves `createEmbedding` under the `embeddings` resource.
+  fixture: openai_v3_project
+  target_file: src/embed.js
+  breaking_change:
+    package: openai
+    old_version: "3.3.0"
+    new_version: "4.0.0"
+    old_api: "openai.createEmbedding(params)"
+    new_api: "openai.embeddings.create(params)"
+    description: >
+      `openai.createEmbedding()` was replaced by
+      `openai.embeddings.create()`; the response is returned directly, no
+      longer wrapped in `.data`.
+    migration_guide: >
+      Replace `openai.createEmbedding(params)` with
+      `openai.embeddings.create(params)`, and drop the leading `.data` when
+      reading the response.
+    kind: method_renamed
+    source: manual
+    provider_id: openai
+    confidence: 0.9
+    examples:
+      - - |
+          const response = await openai.createEmbedding({ model, input: text });
+          return response.data.data[0].embedding;
+        - |
+          const response = await openai.embeddings.create({ model, input: text });
+          return response.data[0].embedding;
+  fix_assertion:
+    must_contain:
+      - "embeddings.create"
+    must_not_contain:
+      - "createEmbedding"
+    max_changed_line_ratio: 0.5
+
+- id: openai-v4-completions
+  category: fix_generation
+  verified: false
+  description: >
+    v4 moves the legacy `createCompletion` text-completion call under the
+    `completions` resource.
+  fixture: openai_v3_project
+  target_file: src/index.js
+  breaking_change:
+    package: openai
+    old_version: "3.3.0"
+    new_version: "4.0.0"
+    old_api: "openai.createCompletion(params)"
+    new_api: "openai.completions.create(params)"
+    description: >
+      `openai.createCompletion()` was replaced by
+      `openai.completions.create()`; the response is returned directly, no
+      longer wrapped in `.data`.
+    migration_guide: >
+      Replace `openai.createCompletion(params)` with
+      `openai.completions.create(params)`, and drop the leading `.data` when
+      reading the response.
+    kind: method_renamed
+    source: manual
+    provider_id: openai
+    confidence: 0.9
+    examples:
+      - - |
+          const response = await openai.createCompletion({ model, prompt, max_tokens });
+          return response.data.choices[0].text;
+        - |
+          const response = await openai.completions.create({ model, prompt, max_tokens });
+          return response.choices[0].text;
+  fix_assertion:
+    must_contain:
+      - "completions.create"
+    must_not_contain:
+      - "createCompletion"
+    max_changed_line_ratio: 0.5
+
+- id: openai-v4-images
+  category: fix_generation
+  verified: false
+  description: >
+    v4 moves `createImage` under the `images` resource, renamed `generate`.
+  fixture: openai_v3_project
+  target_file: src/index.js
+  breaking_change:
+    package: openai
+    old_version: "3.3.0"
+    new_version: "4.0.0"
+    old_api: "openai.createImage(params)"
+    new_api: "openai.images.generate(params)"
+    description: >
+      `openai.createImage()` was replaced by `openai.images.generate()`; the
+      response is returned directly, no longer wrapped in `.data`.
+    migration_guide: >
+      Replace `openai.createImage(params)` with
+      `openai.images.generate(params)`, and drop the leading `.data` when
+      reading the response.
+    kind: method_renamed
+    source: manual
+    provider_id: openai
+    confidence: 0.9
+    examples:
+      - - |
+          const response = await openai.createImage({ prompt, n, size });
+          return response.data.data[0].url;
+        - |
+          const response = await openai.images.generate({ prompt, n, size });
+          return response.data[0].url;
+  fix_assertion:
+    must_contain:
+      - "images.generate"
+    must_not_contain:
+      - "createImage"
+    max_changed_line_ratio: 0.5

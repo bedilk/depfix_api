@@ -1,0 +1,62 @@
+# Test-only feeds. They model upstream structural events; they are not
+# pre-built BreakingChange JSON files and must not be added to providers.yaml.
+providers:
+  - id: openai
+    sdk_packages: [{name: openai, ecosystem: npm}]
+    feeds:
+      # New fixture id lets an already-run local database receive the corrected event.
+      - {kind: fixture_change, id: openai-v3-v4-canonical, old_token: "3.3.0", new_token: "4.0.1", spec_changes: [{kind: operation_id_changed, severity: breaking, subject: "openai.createChatCompletion", after: "openai.chat.completions.create", detail: "OpenAI v4 chat migration."}]}
+  - id: stripe
+    sdk_packages: [{name: stripe, ecosystem: npm}]
+    feeds:
+      - {kind: fixture_change, id: stripe-v12-v13, old_token: "12.0.0", new_token: "13.0.0", spec_changes: [{kind: operation_id_changed, severity: breaking, subject: "stripe.charges.create", after: "stripe.paymentIntents.create", detail: "Stripe Charges migration."}]}
+  - id: anthropic
+    sdk_packages: [{name: "@anthropic-ai/sdk", ecosystem: npm}]
+    feeds:
+      - {kind: fixture_change, id: anthropic-completions-messages, old_token: "0.8.0", new_token: "0.9.0", spec_changes: [{kind: operation_id_changed, severity: breaking, subject: "anthropic.completions.create", after: "anthropic.messages.create", detail: "Anthropic Messages migration."}]}
+  - id: supabase
+    sdk_packages: [{name: "@supabase/supabase-js", ecosystem: npm}]
+    feeds:
+      - {kind: fixture_change, id: supabase-v1-v2, old_token: "1.0.0", new_token: "2.0.0", spec_changes: [{kind: operation_id_changed, severity: breaking, subject: "supabase.auth.signIn", after: "supabase.auth.signInWithPassword", detail: "Supabase auth migration."}]}
+  - id: vercel-ai
+    sdk_packages: [{name: ai, ecosystem: npm}]
+    feeds:
+      - {kind: fixture_change, id: vercel-ai-v2-v3, old_token: "2.0.0", new_token: "3.0.0", spec_changes: [{kind: operation_id_changed, severity: breaking, subject: "vercel-ai.generateText", after: "vercel-ai.streamText", detail: "Vercel AI migration."}]}
+  - id: sentry
+    sdk_packages: [{name: "@sentry/node", ecosystem: npm}]
+    feeds:
+      - {kind: fixture_change, id: sentry-v7-v8, old_token: "7.0.0", new_token: "8.0.0", spec_changes: [{kind: operation_id_changed, severity: breaking, subject: "sentry.Integrations.Http", after: "sentry.httpIntegration", detail: "Sentry integration migration."}]}
+  - id: mongodb
+    sdk_packages: [{name: mongodb, ecosystem: npm}]
+    feeds:
+      - {kind: fixture_change, id: mongodb-v4-v5, old_token: "4.0.0", new_token: "5.0.0", spec_changes: [{kind: operation_id_changed, severity: breaking, subject: "mongodb.findOne", after: "mongodb.findOneAsync", detail: "MongoDB callback migration."}]}
+  - id: seed-multi
+    sdk_packages:
+      - {name: stripe, ecosystem: npm}
+      - {name: openai, ecosystem: npm}
+    feeds:
+      - kind: fixture_change
+        id: multi-stripe-v12-v13
+        old_token: "12.0.0"
+        new_token: "13.0.0"
+        spec_changes:
+          - kind: operation_id_changed
+            severity: breaking
+            subject: "stripe.charges.create"
+            after: "stripe.paymentIntents.create"
+            detail: "Multi-SDK Stripe migration."
+      - kind: fixture_change
+        id: multi-openai-v3-v4
+        old_token: "3.3.0"
+        new_token: "4.0.1"
+        spec_changes:
+          - kind: operation_id_changed
+            severity: breaking
+            subject: "openai.createChatCompletion"
+            after: "openai.chat.completions.create"
+            detail: "Multi-SDK OpenAI chat migration."
+          - kind: operation_id_changed
+            severity: breaking
+            subject: "openai.createModeration"
+            after: "openai.moderations.create"
+            detail: "Multi-SDK OpenAI moderation migration."

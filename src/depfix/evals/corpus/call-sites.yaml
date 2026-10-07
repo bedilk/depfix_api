@@ -1,0 +1,120 @@
+# call_sites corpus, scoring `CallSiteScanner` directly (see
+# `EvalRunner._run_call_sites`). No LLM involved -- `requires_llm` defaults
+# to false for this category (loader.py's `default_requires_llm`) -- so
+# these run under `--no-llm` too.
+#
+# `verified: true` on every case below because each was actually run against
+# `CallSiteScanner` in this environment (not just eyeballed) before being
+# written here -- see the fixtures under tests/fixtures/{openai_v3_project,
+# stripe_wrapper_project, openai_ts_project, unrelated_project}.
+
+- id: call-sites-openai-v3-wrapped-client
+  category: call_sites
+  verified: true
+  description: >
+    CJS wrapper module (client.js constructs `new OpenAIApi(configuration)`
+    and re-exports it via `module.exports = { openai }`); four other files
+    require the wrapper and call methods on it. Exercises one-hop
+    binding propagation plus the CJS destructured-construction and
+    object-literal re-export forms.
+  fixture: openai_v3_project
+  provider_id: openai
+  sdk_packages: ["openai"]
+  expected_call_sites:
+    - symbol_contains: "createChatCompletion"
+      kind: method_call
+      file_contains: "chat.js"
+      min_confidence: medium
+    - symbol_contains: "createModeration"
+      kind: method_call
+      file_contains: "chat.js"
+      min_confidence: medium
+    - symbol_contains: "createEmbedding"
+      kind: method_call
+      file_contains: "embed.js"
+      min_confidence: medium
+    - symbol_contains: "createCompletion"
+      kind: method_call
+      file_contains: "index.js"
+      min_confidence: medium
+    - symbol_contains: "createImage"
+      kind: method_call
+      file_contains: "index.js"
+      min_confidence: medium
+
+- id: call-sites-openai-v3-narrowed-by-change
+  category: call_sites
+  verified: true
+  description: >
+    Same fixture as call-sites-openai-v3-wrapped-client, but the
+    ScanTarget is narrowed to one breaking change's symbol
+    (`openai.createModeration`) via `symbols` -- checks that narrowing
+    actually suppresses the other four call sites rather than just
+    filtering cosmetically after the fact.
+  fixture: openai_v3_project
+  provider_id: openai
+  sdk_packages: ["openai"]
+  symbols: ["openai.createModeration"]
+  expected_call_sites:
+    - symbol_contains: "createModeration"
+      kind: method_call
+      file_contains: "chat.js"
+      min_confidence: medium
+
+- id: call-sites-stripe-wrapped-client
+  category: call_sites
+  verified: true
+  description: >
+    A different wrapper shape than the openai_v3_project case: a single
+    `module.exports = stripe` bare-identifier re-export (not an object
+    literal), plus a dated `apiVersion` API-version-pin literal on the
+    same construction. Exercises the bare-assignment CJS re-export form
+    and the API_VERSION_PIN kind.
+  fixture: stripe_wrapper_project
+  provider_id: stripe
+  sdk_packages: ["stripe"]
+  expected_call_sites:
+    - symbol_contains: "customers.create"
+      kind: method_call
+      file_contains: "billing.js"
+      min_confidence: medium
+    - symbol_contains: "charges.create"
+      kind: method_call
+      file_contains: "billing.js"
+      min_confidence: medium
+    - kind: api_version_pin
+      file_contains: "stripeClient.js"
+      min_confidence: medium
+
+- id: call-sites-openai-ts-esm-wrapper
+  category: call_sites
+  verified: true
+  description: >
+    ESM/TypeScript: `import type { ClientOptions } from "openai"` alongside
+    a value import, and a declare-and-export-in-one-statement wrapper
+    (`export const openaiClient = new OpenAI(options)`). Exercises the
+    `import type` tolerance and the ESM one-statement construct+export
+    pattern, both TS-specific forms the CJS fixtures above don't cover.
+  fixture: openai_ts_project
+  provider_id: openai
+  sdk_packages: ["openai"]
+  expected_call_sites:
+    - symbol_contains: "moderations.create"
+      kind: method_call
+      file_contains: "index.ts"
+      min_confidence: medium
+
+- id: call-sites-unrelated-project-precision-floor
+  category: call_sites
+  verified: true
+  description: >
+    No file in this fixture imports the "openai" or "stripe" packages, but
+    it contains two lookalike traps: a local variable literally named
+    `openai` constructed from an unrelated local class, and a Kubernetes-
+    manifest-shaped `apiVersion: "apps/v1"` field (not a Stripe/OpenAI
+    version pin). `forbidden_files` fails the case outright if either trap
+    produces an actionable (HIGH/MEDIUM) call site.
+  fixture: unrelated_project
+  provider_id: openai
+  sdk_packages: ["openai"]
+  forbidden_files: ["unrelated_project"]

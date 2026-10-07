@@ -1,0 +1,67 @@
+# =============================================================================
+#  depfix — local development stack
+#  Only Postgres + Redis are wired up for Day 2. The `app` service is
+#  provided for parity; use `make run` locally instead when iterating.
+# =============================================================================
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: depfix-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: depfix
+      POSTGRES_PASSWORD: depfix
+      POSTGRES_DB: depfix
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U depfix -d depfix"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: depfix-redis
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: depfix:local
+    container_name: depfix-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://depfix:depfix@postgres:5432/depfix
+      REDIS_URL: redis://redis:6379/0
+    cap_drop:
+      - ALL
+    volumes:
+      - ./tests/fixtures/openai_v3_project:/work:ro
+      - ./output:/app/output
+    # Override at runtime, e.g.:
+    #   docker compose run --rm app --codebase /work --show-diffs
+    command: ["--help"]
+
+volumes:
+  postgres_data:
+  redis_data:

@@ -1,0 +1,23 @@
+# Local runtime configuration may contain API credentials.
+.env
+.depfix-local.yml
+depfix.db
+
+# Local depfix state: plan artifacts and repository scan observations.
+.depfix/
+
+# Per-user Claude Code settings never belong in the repository.
+.claude/settings.local.json
+
+# Raw session transcripts.
+changes.txt
+
+# Build/runtime artifacts
+__pycache__/
+*.pyc
+.venv/
+src/depfix.egg-info/
+output/
+.depfix-e2e.sqlite3
+.depfix-cache/
+.DS_Store

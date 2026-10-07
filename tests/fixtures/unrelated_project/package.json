@@ -1,0 +1,9 @@
+{
+  "name": "unrelated-fixture",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Eval fixture: a project with no OpenAI/Stripe SDK usage, but with lookalike names (a local `openai` variable, an unrelated `apiVersion: \"apps/v1\"` config field) that a naive scanner could mistake for real call sites. Used as the corpus's precision floor.",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
+}

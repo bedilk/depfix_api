@@ -1,0 +1,53 @@
+# Release-notes classification corpus, run against classify.notes.NotesClassifier.
+#
+# `verified: false` on both — nobody has run these against a live model in
+# this environment (no API key configured here), so a passing result has
+# never actually been observed. `requires_llm` defaults to true for this
+# category, so both are skipped under `--no-llm`.
+#
+# `also_accept` is used where two kind labels are genuinely defensible given
+# the notes text. A model that answers either is correct; only a wrong
+# *subject* still fails.
+
+- id: notes-method-renamed
+  category: release_notes
+  verified: false
+  description: >
+    A changelog entry describing a method rename should classify as
+    method_renamed, quoting the removed method name verbatim as evidence.
+  package: openai
+  old_version: "3.4.0"
+  new_version: "4.0.0"
+  release_notes_body: |
+    ## v4.0.0
+
+    ### Breaking Changes
+    - Removed `openai.createChatCompletion()`. Use
+      `openai.chat.completions.create()` instead.
+    - The `Configuration` and `OpenAIApi` classes have been removed.
+      Instantiate the client directly with `new OpenAI({ apiKey })`.
+  expected_changes:
+    - kind: method_renamed
+      also_accept: [method_removed]  # "Removed X, use Y" reads as either
+      old_api_contains: createChatCompletion
+      min_confidence: 0.5
+
+- id: notes-param-removed
+  category: release_notes
+  verified: false
+  description: >
+    A changelog entry describing a removed request parameter should classify
+    as param_removed, quoting the parameter name verbatim as evidence.
+  package: widgetpay
+  old_version: "2023-08-01"
+  new_version: "2024-04-10"
+  release_notes_body: |
+    ## 2024-04-10 API version
+
+    - The `charges.create` endpoint no longer accepts the `source` parameter
+      for card payments. Use `payment_method` instead.
+  expected_changes:
+    - kind: param_removed
+      also_accept: [param_renamed]  # "no longer accepts X, use Y" reads as either
+      old_api_contains: source
+      min_confidence: 0.5
