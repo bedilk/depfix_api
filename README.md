@@ -1,14 +1,29 @@
-# depfix — Dependency Fix Agent
+<p align="center">
+  <h1 align="center">depfix</h1>
+  <p align="center"><strong>Dependabot for APIs — automatically fix breaking dependency changes</strong></p>
+</p>
 
-AI-powered tool that automatically fixes breaking dependency changes in your codebase.
+<p align="center">
+  <a href="https://github.com/bedilk/depfix_api/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/bedilk/depfix_api/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="LICENSE"><img alt="Source Available" src="https://img.shields.io/badge/license-Source%20Available-blue.svg"></a>
+  <img alt="Python 3.11+" src="https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white">
+  <img alt="macOS, Linux, Windows" src="https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-000000">
+  <a href="https://github.com/astral-sh/ruff"><img alt="Ruff" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json"></a>
+</p>
 
-When a package ships a breaking change, `depfix`:
+---
+
+When a package ships a breaking change, **depfix**:
 
 1. **Detects** usages of the affected API across your codebase
 2. **Generates** fixes using Google Gemini (or a local Ollama model)
 3. **Validates** the fixes for syntax correctness (via Node.js)
 4. **Verifies** kept fixes by running the target repo's own test suite before/after during `plan` and `apply`
 5. **Outputs** unified diffs that can be applied as patches
+
+> **Alpha.** This is under active development. Expect rough edges, and expect settings and
+> behavior to change between 0.x [releases](https://github.com/bedilk/depfix_api/releases).
+> Start with `--dry-run` or `--no-save` on your first pass.
 
 ## Requirements
 
