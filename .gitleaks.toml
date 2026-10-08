@@ -1,6 +1,8 @@
 [extend]
 useDefault = true
 
-[[allowlist.paths]]
-description = "Test fixtures for the redaction module contain intentionally fake secrets"
-regex = '''tests/unit/test_redaction\.py'''
+[allowlist]
+# Test fixtures for the redaction module contain intentionally fake secrets
+paths = [
+    '''tests/unit/test_redaction\.py''',
+]
