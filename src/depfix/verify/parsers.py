@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import re
+
 import defusedxml.ElementTree as ElementTree
 from defusedxml.ElementTree import ParseError as _XML_PARSE_ERROR
 

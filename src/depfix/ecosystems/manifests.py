@@ -20,6 +20,7 @@ import re
 import tomllib
 from collections.abc import Iterable
 from pathlib import Path
+
 import defusedxml.ElementTree as ElementTree
 
 from depfix.ecosystems.base import DependencyDeclaration

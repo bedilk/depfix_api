@@ -13,8 +13,8 @@ from __future__ import annotations
 
 import hashlib
 from typing import Any, ClassVar
-import defusedxml.ElementTree as ElementTree
 
+import defusedxml.ElementTree as ElementTree
 import httpx
 
 from depfix.sources.base import ChangeSource
