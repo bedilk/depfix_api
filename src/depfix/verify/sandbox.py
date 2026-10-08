@@ -91,7 +91,7 @@ def _sandboxed_env(
         env.update(extra_env)
     # Point HOME at a throwaway directory so test scripts cannot read
     # ~/.ssh, ~/.aws/credentials, or ~/.netrc from the real user home.
-    env["HOME"] = os.environ.get("TMPDIR") or os.environ.get("TMP") or "/tmp"
+    env["HOME"] = os.environ.get("TMPDIR") or os.environ.get("TMP") or "/tmp"  # nosec B108
     return env
 
 
